@@ -1,0 +1,100 @@
+.dashboard {
+  width: 50%;
+  margin: 0 auto;
+
+  .table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 60px 0 30px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    th, td {
+      padding: 10px;
+    }
+
+    thead {
+      border-bottom: 1px solid grey;
+      width: 100%;
+
+      tr {
+        th {
+          width: 9%;
+          text-align: center;
+        }
+      }
+    }
+
+    tbody {
+      width: 100%;
+
+      tr {
+        border-bottom: 1px solid grey;
+
+        td {
+          width: 9%;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .cancelButton {
+    color: white;
+    background-color: #ed7474;
+    border: 1px solid #ed7474;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: lighten(#ed7474, 10%);
+      border: 1px solid lighten(#ed7474, 10%);
+    }
+  }
+
+  .modalHeader {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .modalBody {
+    margin-bottom: 30px;
+  }
+
+  .modalButtonsGroup {
+    display: flex;
+    justify-content: space-around;
+
+    .modalButtonCancel {
+      color: white;
+      background-color: #ed7474;
+      border: 1px solid #ed7474;
+      border-radius: 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: lighten(#ed7474, 10%);
+        border: 1px solid lighten(#ed7474, 10%);
+      }
+    }
+
+    .modalButtonConfirm {
+      color: white;
+      background-color: green;
+      border: 1px solid green;
+      border-radius: 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: lighten(green, 10%);
+        border: 1px solid lighten(green, 10%);
+      }
+    }
+  }
+}
+

@@ -5,7 +5,7 @@
       "status": "active",
       "sum": 300,
       "qty": 2,
-      "volume": 3,
+      "volume": 60,
       "name": "Яблоко",
       "delivery_date": "20.12.2022",
       "currency": "RUB"
@@ -15,7 +15,7 @@
       "status": "archive",
       "sum": 400,
       "qty": 3,
-      "volume": 4,
+      "volume": 12,
       "name": "Груша",
       "delivery_date": "21.12.2022",
       "currency": "USD"
@@ -25,7 +25,7 @@
       "status": "active",
       "sum": 500,
       "qty": 5,
-      "volume": 1,
+      "volume": 10,
       "name": "Банан",
       "delivery_date": "22.12.2022",
       "currency": "USD"
@@ -37,7 +37,7 @@
       "status": "active",
       "sum": 600,
       "qty": 1,
-      "volume": 6,
+      "volume": 60,
       "name": "Стол",
       "delivery_date": "23.12.2022",
       "currency": "AMD"
@@ -47,7 +47,7 @@
       "status": "active",
       "sum": 700,
       "qty": 4,
-      "volume": 1,
+      "volume": 70,
       "name": "Стул",
       "delivery_date": "24.12.2022",
       "currency": "KZT"
@@ -57,8 +57,8 @@
       "id": "id6",
       "status": "active",
       "sum": 800,
-      "qty": 1,
-      "volume": 1,
+      "qty": 2,
+      "volume": 16,
       "name": "Шкаф",
       "delivery_date": "25.12.2022",
       "currency": "EUR"

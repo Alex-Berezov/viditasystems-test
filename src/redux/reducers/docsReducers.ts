@@ -1,12 +1,12 @@
 import { DocsState, DocsAction, DocsActionType } from '../../types/docsType'
 
-const initialState: DocsState = {
+const initialStateDocs: DocsState = {
   docs: [],
   loading: false,
   error: null
 }
 
-export const docsReducers = (state = initialState, action: DocsAction): DocsState => {
+export const docsReducers = (state = initialStateDocs, action: DocsAction): DocsState => {
   switch (action.type) {
     case DocsActionType.FETCH_DOCS:
       return { loading: true, error: null, docs: [] }
