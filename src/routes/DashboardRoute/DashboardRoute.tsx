@@ -1,9 +1,10 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
 import { useActions } from '../../hooks/useAction'
 import Modal from '../../components/Modal/Modal'
 
 import './styles.scss'
+import { IDocuments } from '../../types/Types'
 
 const DashboardRoute: FC = () => {
   const { docs } = useTypedSelector(state => state.docs)
@@ -12,20 +13,51 @@ const DashboardRoute: FC = () => {
   const qtySum = docs.reduce((sum, current) => sum + current.qty, 0)
   const [cancelModalActive, setCencelModalActive] = useState(false)
 
+  const [docsWithChecked, setDocsWithChecked] = useState<any>([])
+  const [theadChecked, setTheadChecked] = useState(false)
+  
+
   useEffect(() => {
     fetchDocs()
   }, [])
 
-  console.log('====================================');
-  console.log('docs >>', docs.map(el => console.log('el >>', el)));
-  console.log('====================================');
+  useEffect(() => {
+    if (docsWithChecked.length === docs.length && docsWithChecked.length) return setTheadChecked(true)
+    if (!docsWithChecked.length) return setTheadChecked(false)
+  }, [docsWithChecked])
+
+  const checkedItem = (id: string, name: string) => {
+    if (!docsWithChecked.find((item: any) => item.id === id)) {
+      setDocsWithChecked([...docsWithChecked, {"id": id, "name": name},])
+    } else {
+      setDocsWithChecked([...docsWithChecked.filter((item: any) => item.id !== id)])
+    }
+  }
+
+  const checkedAll = () => {
+    setTheadChecked(!theadChecked)
+    !theadChecked
+      ? setDocsWithChecked([...docs.map((item: IDocuments) => {
+          return {
+            "id": item.id,
+            "name": item.name
+          }
+        })])
+      : setDocsWithChecked([])
+  }
 
   return (
     <div className='dashboard'>
       <table className="table">
         <thead>
           <tr>
-            <th><input type="checkbox" /></th>
+            <th onClick={() => checkedAll()}>
+              <input
+                type="checkbox"
+                checked={theadChecked}
+                onChange={() => checkedAll()}
+              />
+            </th>
             <th>Name</th>
             <th>Delivery date</th>
             <th>status</th>
@@ -40,8 +72,17 @@ const DashboardRoute: FC = () => {
           {
             docs.map(item => {
               return (
-                <tr key={item.id}>
-                  <td><input type="checkbox" /></td>
+                <tr
+                  key={item.id}
+                  onClick={() => checkedItem(item.id, item.name)}
+                >
+                  <td>
+                    <input
+                      type="checkbox"
+                      onChange={() => checkedItem(item.id, item.name)}
+                      checked={!!docsWithChecked.find((el: any) => el.id === item.id)}
+                      />
+                  </td>
                   <td>{item.name}</td>
                   <td>{item.delivery_date}</td>
                   <td>{item.status}</td>
@@ -75,12 +116,25 @@ const DashboardRoute: FC = () => {
           Вы уверены что хотите аннулировать товар(ы):
           
           <p className="cancelItems">
-            item1, item2, item3
+            {
+              docsWithChecked.map((el: any, i: number) => {
+                if (docsWithChecked[docsWithChecked.length - 1].name === el.name) {
+                  return <b key={el.id}>{el.name}.</b>
+                } else {
+                  return <b key={el.id}>{el.name}, </b>
+                }
+              })
+            }
           </p>
         </div>
         <div className="modalButtonsGroup">
           <button className="modalButtonConfirm">Применить</button>
-          <button className="modalButtonCancel">Отклонить</button>
+          <button 
+            className="modalButtonCancel" 
+            onClick={() => setCencelModalActive(false)}
+          >
+            Отклонить
+          </button>
         </div>
       </Modal>
     </div>

@@ -24,6 +24,10 @@
           width: 9%;
           text-align: center;
         }
+
+        &:first-child {
+          cursor: pointer;
+        }
       }
     }
 
@@ -32,6 +36,7 @@
 
       tr {
         border-bottom: 1px solid grey;
+        cursor: pointer;
 
         td {
           width: 9%;
