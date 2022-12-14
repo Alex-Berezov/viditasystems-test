@@ -1,108 +1,51 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
 import { useActions } from '../../hooks/useAction'
 import Modal from '../../components/Modal/Modal'
-
 import './styles.scss'
-import { IDocuments } from '../../types/Types'
+import { ICheckedItems, IDocuments } from '../../types/Types'
+import ItemSearch from './components/ItemSearch/ItemSearch'
+import useSearch from '../../hooks/useSearch'
+import useItemsSearch from './hooks/useItemsSearch'
+import DashboardTable from './components/DashboardTable/DashboardTable'
 
 const DashboardRoute: FC = () => {
   const { docs } = useTypedSelector(state => state.docs)
-  const { fetchDocs } = useActions()
-  const volumeSum = docs.reduce((sum, current) => sum + current.volume, 0)
-  const qtySum = docs.reduce((sum, current) => sum + current.qty, 0)
+  const { fetchDocs, updateItemStatus } = useActions()
   const [cancelModalActive, setCencelModalActive] = useState(false)
-
-  const [docsWithChecked, setDocsWithChecked] = useState<any>([])
-  const [theadChecked, setTheadChecked] = useState(false)
-  
+  const [docsWithChecked, setDocsWithChecked] = useState<ICheckedItems[]>([])
+  const searchItem = useSearch('')
+  const { searchedItems } = useItemsSearch(docs, searchItem.value)
+  const [filtredItems, setFiltredItems] = useState<Array<IDocuments>>(docs)
 
   useEffect(() => {
     fetchDocs()
   }, [])
 
   useEffect(() => {
-    if (docsWithChecked.length === docs.length && docsWithChecked.length) return setTheadChecked(true)
-    if (!docsWithChecked.length) return setTheadChecked(false)
-  }, [docsWithChecked])
+    setFiltredItems(searchedItems)
+  }, [searchItem.value, searchedItems])
 
-  const checkedItem = (id: string, name: string) => {
-    if (!docsWithChecked.find((item: any) => item.id === id)) {
-      setDocsWithChecked([...docsWithChecked, {"id": id, "name": name},])
-    } else {
-      setDocsWithChecked([...docsWithChecked.filter((item: any) => item.id !== id)])
-    }
+  const cancelItems = () => {
+    setCencelModalActive(false)
+    setDocsWithChecked([])
   }
 
-  const checkedAll = () => {
-    setTheadChecked(!theadChecked)
-    !theadChecked
-      ? setDocsWithChecked([...docs.map((item: IDocuments) => {
-          return {
-            "id": item.id,
-            "name": item.name
-          }
-        })])
-      : setDocsWithChecked([])
+  const updateDocsItems = (id: ICheckedItems[]) => {
+    updateItemStatus(id)
+    setCencelModalActive(false)
   }
 
   return (
     <div className='dashboard'>
-      <table className="table">
-        <thead>
-          <tr>
-            <th onClick={() => checkedAll()}>
-              <input
-                type="checkbox"
-                checked={theadChecked}
-                onChange={() => checkedAll()}
-              />
-            </th>
-            <th>Name</th>
-            <th>Delivery date</th>
-            <th>status</th>
-            <th>qty</th>       
-            <th>sum</th>
-            <th>volume</th> 
-            <th>currency</th>
-            <th>Всего</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            docs.map(item => {
-              return (
-                <tr
-                  key={item.id}
-                  onClick={() => checkedItem(item.id, item.name)}
-                >
-                  <td>
-                    <input
-                      type="checkbox"
-                      onChange={() => checkedItem(item.id, item.name)}
-                      checked={!!docsWithChecked.find((el: any) => el.id === item.id)}
-                      />
-                  </td>
-                  <td>{item.name}</td>
-                  <td>{item.delivery_date}</td>
-                  <td>{item.status}</td>
-                  <td>{item.qty}</td>
-                  <td>{item.sum}</td>
-                  <td>{item.volume}</td>
-                  <td>{item.currency}</td>
-                  <td>{item.sum + item.qty} {item.currency}</td>
-                </tr>
-              )
-            })
-          }
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>Общий обьем: <b>{volumeSum}</b></td>
-            <td>Общее количество: <b>{qtySum}</b></td>
-          </tr>
-        </tfoot>
-      </table>
+      <ItemSearch {...searchItem} />
+
+      <DashboardTable
+        docs={docs}
+        filtredItems={filtredItems}
+        docsWithChecked={docsWithChecked}
+        setDocsWithChecked={setDocsWithChecked}
+      />
 
       <button className="cancelButton" onClick={() => setCencelModalActive(true)}>
         Аннулировать
@@ -113,11 +56,15 @@ const DashboardRoute: FC = () => {
           <h3>Аннулировать товары</h3>
         </div>
         <div className="modalBody">
-          Вы уверены что хотите аннулировать товар(ы):
+          {
+            !docsWithChecked.length
+              ? 'Нечего аннулировать.'
+              : 'Вы уверены что хотите аннулировать товар(ы):'
+          }
           
           <p className="cancelItems">
             {
-              docsWithChecked.map((el: any, i: number) => {
+              docsWithChecked.map((el: any) => {
                 if (docsWithChecked[docsWithChecked.length - 1].name === el.name) {
                   return <b key={el.id}>{el.name}.</b>
                 } else {
@@ -128,15 +75,22 @@ const DashboardRoute: FC = () => {
           </p>
         </div>
         <div className="modalButtonsGroup">
-          <button className="modalButtonConfirm">Применить</button>
+          <button
+            className={!docsWithChecked.length ? 'modalButtonConfirm disabled' : 'modalButtonConfirm'}
+            disabled={!docsWithChecked.length}
+            onClick={() => updateDocsItems(docsWithChecked)}
+          >
+            Применить
+          </button>
           <button 
             className="modalButtonCancel" 
-            onClick={() => setCencelModalActive(false)}
+            onClick={() => cancelItems()}
           >
             Отклонить
           </button>
         </div>
       </Modal>
+
     </div>
   )
 }

@@ -5,5 +5,8 @@ export const documents2API = {
   async getDocuments2() {
     const res = await instance.get<IDocuments[]>('documents2')
     return res.data
+  },
+  async updateDocuments2Item(itemId: string) {
+    return await instance.post(`documents2/${itemId}`, { 'status': 'archive' })
   }
 }

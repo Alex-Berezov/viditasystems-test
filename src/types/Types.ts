@@ -8,3 +8,8 @@ export interface IDocuments {
   delivery_date: string,
   currency: string
 }
+
+export interface ICheckedItems {
+  id: string
+  name: string
+}

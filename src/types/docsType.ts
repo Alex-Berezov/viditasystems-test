@@ -8,12 +8,18 @@ export interface DocsState {
 
 export enum DocsActionType {
   FETCH_DOCS = 'FETCH_DOCS',
+  UPDATE_ITEM_STATUS = 'UPDATE_ITEM_STATUS',
   DOCS_SUCCESS = 'DOCS_SUCCESS',
   DOCS_ERROR = 'DOCS_ERROR'
 }
 
 interface FetchDocsAction {
   type: DocsActionType.FETCH_DOCS
+}
+
+interface UpdateDocsAction {
+  type: DocsActionType.UPDATE_ITEM_STATUS,
+  payload: string
 }
 
 interface DocsSuccessAction {
@@ -28,5 +34,6 @@ interface DocsErrorAction {
 
 export type DocsAction =
   FetchDocsAction
+  | UpdateDocsAction
   | DocsSuccessAction
   | DocsErrorAction

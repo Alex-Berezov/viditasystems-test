@@ -1,6 +1,16 @@
 {
   "documents1": [
     {
+      "id": "id3",
+      "status": "active",
+      "sum": 500,
+      "qty": 5,
+      "volume": 10,
+      "name": "Банан",
+      "delivery_date": "22.12.2022",
+      "currency": "USD"
+    },
+    {
       "id": "id1",
       "status": "active",
       "sum": 300,
@@ -12,26 +22,26 @@
     },
     {
       "id": "id2",
-      "status": "archive",
+      "status": "active",
       "sum": 400,
       "qty": 3,
       "volume": 12,
       "name": "Груша",
       "delivery_date": "21.12.2022",
       "currency": "USD"
-    },
-    {
-      "id": "id3",
-      "status": "active",
-      "sum": 500,
-      "qty": 5,
-      "volume": 10,
-      "name": "Банан",
-      "delivery_date": "22.12.2022",
-      "currency": "USD"
     }
   ],
   "documents2": [
+    {
+      "id": "id6",
+      "status": "active",
+      "sum": 800,
+      "qty": 2,
+      "volume": 16,
+      "name": "Шкаф",
+      "delivery_date": "25.12.2022",
+      "currency": "EUR"
+    },
     {
       "id": "id4",
       "status": "active",
@@ -51,17 +61,6 @@
       "name": "Стул",
       "delivery_date": "24.12.2022",
       "currency": "KZT"
-    }
-    ,
-    {
-      "id": "id6",
-      "status": "active",
-      "sum": 800,
-      "qty": 2,
-      "volume": 16,
-      "name": "Шкаф",
-      "delivery_date": "25.12.2022",
-      "currency": "EUR"
     }
   ]
 }
