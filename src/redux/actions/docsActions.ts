@@ -13,7 +13,7 @@ export const fetchDocs = () => {
       const data2 = await documents2API.getDocuments2()
       const mergedDocs = [...data, ...data2]
 
-      dispatch({ type: DocsActionType.DOCS_SUCCESS, payload: mergedDocs })
+      dispatch({ type: DocsActionType.DOCS_SUCCESS, payload: mergedDocs || [] })
     } catch (error) {
       dispatch({
         type: DocsActionType.DOCS_ERROR,
@@ -30,29 +30,27 @@ export const updateItemStatus = (itemsArr: ICheckedItems[]) => {
 
       const data = await documents1API.getDocuments1()
       const data2 = await documents2API.getDocuments2()
+      const mergedDocs = [...data, ...data2]
 
       data.forEach(item => {
-        itemsArr.forEach(elem => {
+        itemsArr.forEach(async elem => {
           if (item.id === elem.id) {
-            console.log('====================================');
-            console.log('data >>', elem.id);
-            console.log('====================================');
-            documents1API.updateDocuments1Item(elem.id)
+            await documents1API.updateDocuments1Item(elem.id)
+            dispatch({ type: DocsActionType.UPDATE_ITEM_STATUS, payload: elem.id})
           }
         })
       })
 
       data2.forEach(item => {
-        itemsArr.forEach(elem => {
+        itemsArr.forEach(async elem => {
           if (item.id === elem.id) {
-            console.log('====================================');
-            console.log('data2 >>', elem.id);
-            console.log('====================================');
-            documents2API.updateDocuments2Item(elem.id)
+            await documents2API.updateDocuments2Item(elem.id)
+            dispatch({ type: DocsActionType.UPDATE_ITEM_STATUS, payload: elem.id})
           }
         })
       })
 
+      dispatch({ type: DocsActionType.DOCS_SUCCESS, payload: mergedDocs || [] })
     } catch (error) {
       dispatch({
         type: DocsActionType.DOCS_ERROR,

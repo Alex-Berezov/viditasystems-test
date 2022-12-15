@@ -7,6 +7,6 @@ export const documents2API = {
     return res.data
   },
   async updateDocuments2Item(itemId: string) {
-    return await instance.post(`documents2/${itemId}`, { 'status': 'archive' })
+    return await instance.patch(`documents2/${itemId}`, { 'status': 'archive' })
   }
 }

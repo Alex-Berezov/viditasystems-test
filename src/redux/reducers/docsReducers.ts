@@ -14,7 +14,7 @@ export const docsReducers = (state = initialStateDocs, action: DocsAction): Docs
     case DocsActionType.UPDATE_ITEM_STATUS:
       return {
         ...state,
-        docs: state.docs.map(item => {
+        docs: state?.docs?.map(item => {
           return item.id === action.payload
             ? { ...item, status: 'archive' }
             : item

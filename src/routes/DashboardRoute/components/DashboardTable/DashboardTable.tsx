@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
+import Loader from '../../../../assets/Loader/Loader'
 import { IDocuments } from '../../../../types/Types'
 import { sortByField } from '../../utils/sortByField'
 import StatusButton from '../StatusButton/StatusButton'
@@ -11,19 +12,21 @@ type docsWithCheckedType = {
 
 interface DashboardTableProps {
   docs: Array<IDocuments>
+  loading: boolean
+  error: string | null
   filtredItems: Array<IDocuments>
   docsWithChecked: Array<docsWithCheckedType>
   setDocsWithChecked: (arr: Array<docsWithCheckedType>) => void
 }
 
 const DashboardTable: FC<DashboardTableProps> = (
-  { docs, filtredItems, docsWithChecked, setDocsWithChecked }
+  { docs, loading, error, filtredItems, docsWithChecked, setDocsWithChecked }
 ) => {
   const volumeSum = docs.reduce((sum, current) => sum + current.volume, 0)
   const qtySum = docs.reduce((sum, current) => sum + current.qty, 0)
   const [theadChecked, setTheadChecked] = useState(false)
 
-  const checkedAll = () => {
+  const checkedAll = useCallback(() => {
     setTheadChecked(!theadChecked)
     !theadChecked
       ? setDocsWithChecked([...docs.map((item: IDocuments) => {
@@ -33,20 +36,26 @@ const DashboardTable: FC<DashboardTableProps> = (
           }
         })])
       : setDocsWithChecked([])
-  }
+  }, [docs, setDocsWithChecked, theadChecked])
 
   useEffect(() => {
     if (docsWithChecked.length === docs.length && docsWithChecked.length) return setTheadChecked(true)
     if (!docsWithChecked.length) return setTheadChecked(false)
   }, [docs.length, docsWithChecked])
 
-  const checkedItem = (id: string, name: string) => {
+  const checkedItem = useCallback((id: string, name: string) => {
     if (!docsWithChecked.find((item: any) => item.id === id)) {
       setDocsWithChecked([...docsWithChecked, {"id": id, "name": name},])
     } else {
       setDocsWithChecked([...docsWithChecked.filter((item: any) => item.id !== id)])
     }
-  }
+  }, [docsWithChecked, setDocsWithChecked])
+
+  if (loading) return <Loader />
+
+  if (error) return <h3>{error}</h3>
+
+  if (!docs) return <h3>Тут пока ничего нет.</h3>
   
   return (
     <table className="table">

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
 import { useActions } from '../../hooks/useAction'
 import Modal from '../../components/Modal/Modal'
@@ -10,7 +10,7 @@ import useItemsSearch from './hooks/useItemsSearch'
 import DashboardTable from './components/DashboardTable/DashboardTable'
 
 const DashboardRoute: FC = () => {
-  const { docs } = useTypedSelector(state => state.docs)
+  const { docs, error, loading } = useTypedSelector(state => state.docs)
   const { fetchDocs, updateItemStatus } = useActions()
   const [cancelModalActive, setCencelModalActive] = useState(false)
   const [docsWithChecked, setDocsWithChecked] = useState<ICheckedItems[]>([])
@@ -26,22 +26,25 @@ const DashboardRoute: FC = () => {
     setFiltredItems(searchedItems)
   }, [searchItem.value, searchedItems])
 
-  const cancelItems = () => {
+  const cancelItems = useCallback(() => {
     setCencelModalActive(false)
     setDocsWithChecked([])
-  }
+  }, [])
 
-  const updateDocsItems = (id: ICheckedItems[]) => {
+  const updateDocsItems = useCallback((id: ICheckedItems[]) => {
     updateItemStatus(id)
     setCencelModalActive(false)
-  }
+    setDocsWithChecked([])
+  }, [updateItemStatus])
 
   return (
     <div className='dashboard'>
       <ItemSearch {...searchItem} />
 
       <DashboardTable
-        docs={docs}
+        docs={docs || []}
+        loading={loading}
+        error={error}
         filtredItems={filtredItems}
         docsWithChecked={docsWithChecked}
         setDocsWithChecked={setDocsWithChecked}
